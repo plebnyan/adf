@@ -1,0 +1,9 @@
+{
+	"name": "nlt-dp203",
+	"location": "southeastasia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "ed323abf-1c6e-46a1-9e50-aad8fd68f468",
+		"tenantId": "aea112db-7ad9-41ae-9bdd-8eacd8d90ac0"
+	}
+}
