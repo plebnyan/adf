@@ -707,6 +707,64 @@
 								}
 							}
 						]
+					},
+					{
+						"name": "Send Success Noti",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Copy to Processed",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"method": "POST",
+							"headers": {},
+							"url": "https://prod-12.southeastasia.logic.azure.com:443/workflows/e4328903262243db92a5985bf63a31a0/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=J-HujCTxzLRKZeNG53TUpT4v5Q2AU7C9ir7rysJb34A",
+							"body": {
+								"value": "{\n  \"pipelineName\": \"@{pipeline().Pipeline}\",\n  \"runId\": \"@{pipeline().RunId}\",\n  \"status\": \"Success!\",\n  \"startTime\": \"@{pipeline().TriggerTime}\",\n  \"endTime\": \"@{utcnow()}\",\n  \"durationInSeconds\": \"@{div(sub(ticks(utcnow()), ticks(pipeline().TriggerTime)), 10000000)}\",\n  \"triggerType\": \"@{pipeline().TriggerType}\"\n}\n",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Send Fail Noti",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Copy to Processed",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"method": "POST",
+							"headers": {},
+							"url": "https://prod-12.southeastasia.logic.azure.com:443/workflows/e4328903262243db92a5985bf63a31a0/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=J-HujCTxzLRKZeNG53TUpT4v5Q2AU7C9ir7rysJb34A",
+							"body": {
+								"value": "{\n  \"pipelineName\": \"@{pipeline().Pipeline}\",\n  \"runId\": \"@{pipeline().RunId}\",\n  \"status\": \"Failed\",\n  \"startTime\": \"@{pipeline().TriggerTime}\",\n  \"endTime\": \"@{utcnow()}\",\n  \"durationInSeconds\": \"@{div(sub(ticks(utcnow()), ticks(pipeline().TriggerTime)), 10000000)}\",\n  \"triggerType\": \"@{pipeline().TriggerType}\"\n}\n",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"policy": {
@@ -824,6 +882,44 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/trigger1')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "pl_API_test",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2025-02-08T03:34:00",
+						"timeZone": "SE Asia Standard Time",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								6
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/pl_API_test')]"
+			]
 		}
 	]
 }
