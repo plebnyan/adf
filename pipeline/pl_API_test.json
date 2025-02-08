@@ -325,7 +325,9 @@
 					"sink": {
 						"type": "ParquetSink",
 						"storeSettings": {
-							"type": "AzureBlobFSWriteSettings"
+							"type": "AzureBlobFSWriteSettings",
+							"copyBehavior": "FlattenHierarchy",
+							"blockSizeInMB": 4
 						},
 						"formatSettings": {
 							"type": "ParquetWriteSettings"
@@ -668,7 +670,12 @@
 				"outputs": [
 					{
 						"referenceName": "DS_Generic_Parquet",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"dir": "openWeather",
+							"file_name": "@concat(formatDateTime(utcNow(),'yyyy-MM-dd'),'.parquet')",
+							"ws": "processed"
+						}
 					}
 				]
 			}
