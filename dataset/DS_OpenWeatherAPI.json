@@ -1,0 +1,18 @@
+{
+	"name": "DS_OpenWeatherAPI",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_REST_OpenWeatherAPI",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"base_url": "https://api.openweathermap.org/data/2.5/"
+			}
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"typeProperties": {
+			"relativeUrl": "weather?lat=19.633&lon=96.117&appid=bca1ae0e26887cd5a74b1c8efc2c6e7d&units=metric"
+		},
+		"schema": []
+	}
+}
