@@ -1,10 +1,15 @@
 {
 	"name": "LS_REST_OpenWeatherAPI",
 	"properties": {
+		"parameters": {
+			"base_url": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "RestService",
 		"typeProperties": {
-			"url": "https://api.openweathermap.org/data/2.5/",
+			"url": "@{linkedService().base_url}",
 			"enableServerCertificateValidation": true,
 			"authenticationType": "Anonymous"
 		}
