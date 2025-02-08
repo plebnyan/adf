@@ -11,6 +11,9 @@
 			},
 			"file_name": {
 				"type": "string"
+			},
+			"ws": {
+				"type": "string"
 			}
 		},
 		"annotations": [],
@@ -18,7 +21,18 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileSystem": "stg"
+				"fileName": {
+					"value": "@dataset().file_name",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().dir",
+					"type": "Expression"
+				},
+				"fileSystem": {
+					"value": "@dataset().ws",
+					"type": "Expression"
+				}
 			},
 			"compressionCodec": "snappy"
 		},
