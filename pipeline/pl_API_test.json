@@ -1,0 +1,678 @@
+{
+	"name": "pl_API_test",
+	"properties": {
+		"activities": [
+			{
+				"name": "API Call",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RestSource",
+						"httpRequestTimeout": "00:01:40",
+						"requestInterval": "00.00:00:00.010",
+						"requestMethod": "GET",
+						"paginationRules": {
+							"supportRFC5988": "true"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings",
+							"copyBehavior": "FlattenHierarchy",
+							"blockSizeInMB": 4
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "$['coord']['lon']"
+								},
+								"sink": {
+									"name": "lon"
+								}
+							},
+							{
+								"source": {
+									"path": "$['coord']['lat']"
+								},
+								"sink": {
+									"name": "lat"
+								}
+							},
+							{
+								"source": {
+									"path": "$['weather'][0]['id']"
+								},
+								"sink": {
+									"name": "weather'][0]['id"
+								}
+							},
+							{
+								"source": {
+									"path": "$['weather'][0]['main']"
+								},
+								"sink": {
+									"name": "main"
+								}
+							},
+							{
+								"source": {
+									"path": "$['weather'][0]['description']"
+								},
+								"sink": {
+									"name": "description"
+								}
+							},
+							{
+								"source": {
+									"path": "$['weather'][0]['icon']"
+								},
+								"sink": {
+									"name": "icon"
+								}
+							},
+							{
+								"source": {
+									"path": "$['base']"
+								},
+								"sink": {
+									"name": "base"
+								}
+							},
+							{
+								"source": {
+									"path": "$['main']['temp']"
+								},
+								"sink": {
+									"name": "temp"
+								}
+							},
+							{
+								"source": {
+									"path": "$['main']['feels_like']"
+								},
+								"sink": {
+									"name": "feels_like"
+								}
+							},
+							{
+								"source": {
+									"path": "$['main']['temp_min']"
+								},
+								"sink": {
+									"name": "temp_min"
+								}
+							},
+							{
+								"source": {
+									"path": "$['main']['temp_max']"
+								},
+								"sink": {
+									"name": "temp_max"
+								}
+							},
+							{
+								"source": {
+									"path": "$['main']['pressure']"
+								},
+								"sink": {
+									"name": "pressure"
+								}
+							},
+							{
+								"source": {
+									"path": "$['main']['humidity']"
+								},
+								"sink": {
+									"name": "humidity"
+								}
+							},
+							{
+								"source": {
+									"path": "$['main']['sea_level']"
+								},
+								"sink": {
+									"name": "sea_level"
+								}
+							},
+							{
+								"source": {
+									"path": "$['main']['grnd_level']"
+								},
+								"sink": {
+									"name": "grnd_level"
+								}
+							},
+							{
+								"source": {
+									"path": "$['visibility']"
+								},
+								"sink": {
+									"name": "visibility"
+								}
+							},
+							{
+								"source": {
+									"path": "$['wind']['speed']"
+								},
+								"sink": {
+									"name": "speed"
+								}
+							},
+							{
+								"source": {
+									"path": "$['wind']['deg']"
+								},
+								"sink": {
+									"name": "deg"
+								}
+							},
+							{
+								"source": {
+									"path": "$['wind']['gust']"
+								},
+								"sink": {
+									"name": "gust"
+								}
+							},
+							{
+								"source": {
+									"path": "$['clouds']['all']"
+								},
+								"sink": {
+									"name": "all"
+								}
+							},
+							{
+								"source": {
+									"path": "$['dt']"
+								},
+								"sink": {
+									"name": "dt"
+								}
+							},
+							{
+								"source": {
+									"path": "$['sys']['country']"
+								},
+								"sink": {
+									"name": "country"
+								}
+							},
+							{
+								"source": {
+									"path": "$['sys']['sunrise']"
+								},
+								"sink": {
+									"name": "sunrise"
+								}
+							},
+							{
+								"source": {
+									"path": "$['sys']['sunset']"
+								},
+								"sink": {
+									"name": "sunset"
+								}
+							},
+							{
+								"source": {
+									"path": "$['timezone']"
+								},
+								"sink": {
+									"name": "timezone"
+								}
+							},
+							{
+								"source": {
+									"path": "$['id']"
+								},
+								"sink": {
+									"name": "id"
+								}
+							},
+							{
+								"source": {
+									"path": "$['name']"
+								},
+								"sink": {
+									"name": "name"
+								}
+							},
+							{
+								"source": {
+									"path": "$['cod']"
+								},
+								"sink": {
+									"name": "cod"
+								}
+							}
+						],
+						"collectionReference": "$['weather']",
+						"mapComplexValuesToString": true
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "DS_OpenWeatherAPI",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DS_Generic_Parquet",
+						"type": "DatasetReference",
+						"parameters": {
+							"dir": "openWeather",
+							"file_name": {
+								"value": "@concat(formatDateTime(utcNow(),'yyyy-MM-dd'),'.parquet')",
+								"type": "Expression"
+							},
+							"ws": "stg"
+						}
+					}
+				]
+			},
+			{
+				"name": "Copy to Processed",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "API Call",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": "openWeather",
+							"wildcardFileName": "*.parquet",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "ParquetReadSettings"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "lon",
+									"type": "Double",
+									"physicalType": "DOUBLE"
+								},
+								"sink": {
+									"name": "lon",
+									"type": "Double",
+									"physicalType": "DOUBLE"
+								}
+							},
+							{
+								"source": {
+									"name": "lat",
+									"type": "Double",
+									"physicalType": "DOUBLE"
+								},
+								"sink": {
+									"name": "lat",
+									"type": "Double",
+									"physicalType": "DOUBLE"
+								}
+							},
+							{
+								"source": {
+									"name": "weather'][0]['id",
+									"type": "Int64",
+									"physicalType": "INT64"
+								},
+								"sink": {
+									"name": "weather_condition_code",
+									"physicalType": "INT_64"
+								}
+							},
+							{
+								"source": {
+									"name": "main",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "weather_group",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "description",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "weather_description",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "icon",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "icon_id",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "temp",
+									"type": "Double",
+									"physicalType": "DOUBLE"
+								},
+								"sink": {
+									"name": "temp",
+									"type": "Double",
+									"physicalType": "DOUBLE"
+								}
+							},
+							{
+								"source": {
+									"name": "feels_like",
+									"type": "Double",
+									"physicalType": "DOUBLE"
+								},
+								"sink": {
+									"name": "feels_like_temp",
+									"physicalType": "DOUBLE"
+								}
+							},
+							{
+								"source": {
+									"name": "temp_min",
+									"type": "Double",
+									"physicalType": "DOUBLE"
+								},
+								"sink": {
+									"name": "temp_min",
+									"type": "Double",
+									"physicalType": "DOUBLE"
+								}
+							},
+							{
+								"source": {
+									"name": "temp_max",
+									"type": "Double",
+									"physicalType": "DOUBLE"
+								},
+								"sink": {
+									"name": "temp_max",
+									"type": "Double",
+									"physicalType": "DOUBLE"
+								}
+							},
+							{
+								"source": {
+									"name": "pressure",
+									"type": "Int64",
+									"physicalType": "INT64"
+								},
+								"sink": {
+									"name": "pressure",
+									"type": "Int64",
+									"physicalType": "INT_64"
+								}
+							},
+							{
+								"source": {
+									"name": "humidity",
+									"type": "Int64",
+									"physicalType": "INT64"
+								},
+								"sink": {
+									"name": "humidity",
+									"type": "Int64",
+									"physicalType": "INT_64"
+								}
+							},
+							{
+								"source": {
+									"name": "sea_level",
+									"type": "Int64",
+									"physicalType": "INT64"
+								},
+								"sink": {
+									"name": "sea_level",
+									"type": "Int64",
+									"physicalType": "INT_64"
+								}
+							},
+							{
+								"source": {
+									"name": "grnd_level",
+									"type": "Int64",
+									"physicalType": "INT64"
+								},
+								"sink": {
+									"name": "grnd_level",
+									"type": "Int64",
+									"physicalType": "INT_64"
+								}
+							},
+							{
+								"source": {
+									"name": "visibility",
+									"type": "Int64",
+									"physicalType": "INT64"
+								},
+								"sink": {
+									"name": "visibility_distance_meter",
+									"physicalType": "INT_64"
+								}
+							},
+							{
+								"source": {
+									"name": "speed",
+									"type": "Double",
+									"physicalType": "DOUBLE"
+								},
+								"sink": {
+									"name": "wind_speed_m/s",
+									"physicalType": "DOUBLE"
+								}
+							},
+							{
+								"source": {
+									"name": "deg",
+									"type": "Int64",
+									"physicalType": "INT64"
+								},
+								"sink": {
+									"name": "wind_direction_degree",
+									"physicalType": "INT_64"
+								}
+							},
+							{
+								"source": {
+									"name": "gust",
+									"type": "Double",
+									"physicalType": "DOUBLE"
+								},
+								"sink": {
+									"name": "gust",
+									"type": "Double",
+									"physicalType": "DOUBLE"
+								}
+							},
+							{
+								"source": {
+									"name": "all",
+									"type": "Int64",
+									"physicalType": "INT64"
+								},
+								"sink": {
+									"name": "cloudiness_pct",
+									"physicalType": "INT_64"
+								}
+							},
+							{
+								"source": {
+									"name": "dt",
+									"type": "Int64",
+									"physicalType": "INT64"
+								},
+								"sink": {
+									"name": "time_stamp",
+									"physicalType": "INT_64"
+								}
+							},
+							{
+								"source": {
+									"name": "country",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "country_code",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "sunrise",
+									"type": "Int64",
+									"physicalType": "INT64"
+								},
+								"sink": {
+									"name": "sunrise_time",
+									"physicalType": "INT_64"
+								}
+							},
+							{
+								"source": {
+									"name": "sunset",
+									"type": "Int64",
+									"physicalType": "INT64"
+								},
+								"sink": {
+									"name": "sunset_time",
+									"physicalType": "INT_64"
+								}
+							},
+							{
+								"source": {
+									"name": "timezone",
+									"type": "Int64",
+									"physicalType": "INT64"
+								},
+								"sink": {
+									"name": "timezone",
+									"type": "Int64",
+									"physicalType": "INT_64"
+								}
+							},
+							{
+								"source": {
+									"name": "id",
+									"type": "Int64",
+									"physicalType": "INT64"
+								},
+								"sink": {
+									"name": "city_id",
+									"physicalType": "INT_64"
+								}
+							},
+							{
+								"source": {
+									"name": "name",
+									"type": "String",
+									"physicalType": "UTF8"
+								},
+								"sink": {
+									"name": "city_name",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "cod",
+									"type": "Int64",
+									"physicalType": "INT64"
+								},
+								"sink": {
+									"name": "respond_status",
+									"physicalType": "INT_64"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "DS_Generic_Parquet",
+						"type": "DatasetReference",
+						"parameters": {
+							"dir": "openWeather",
+							"file_name": {
+								"value": "@concat(formatDateTime(utcNow(),'yyyy-MM-dd'),'.parquet')",
+								"type": "Expression"
+							},
+							"ws": "stg"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DS_Generic_Parquet",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": []
+	}
+}
