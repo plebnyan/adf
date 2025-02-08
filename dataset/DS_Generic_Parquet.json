@@ -1,0 +1,27 @@
+{
+	"name": "DS_Generic_Parquet",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ADLS",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"dir": {
+				"type": "string"
+			},
+			"file_name": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileSystem": "stg"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}
