@@ -21,7 +21,10 @@
 							"type": "AmazonS3ReadSettings",
 							"recursive": true,
 							"wildcardFolderPath": "scraped_data",
-							"wildcardFileName": "*.csv",
+							"wildcardFileName": {
+								"value": "@concat('jobs_',formatDateTime(utcNow('d'),'yyyyMMdd'),'.csv')",
+								"type": "Expression"
+							},
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
