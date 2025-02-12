@@ -5,14 +5,24 @@
 		"factoryName": {
 			"value": "nlt-dp203"
 		},
-		"ADLS_accountKey": {
-			"value": ""
-		},
 		"ADLS_properties_typeProperties_url": {
 			"value": "https://nlt1166dp203.dfs.core.windows.net/"
 		},
+		"KeyVault_properties_typeProperties_baseUrl": {
+			"value": "https://nlt-dp203.vault.azure.net/"
+		},
 		"LS_REST_OpenWeatherAPI_properties_typeProperties_url": {
 			"value": "@{linkedService().base_url}"
+		},
+		"LS_AWS_S3_properties_typeProperties_accessKeyId": {
+			"value": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "KeyVault",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "AWS-S3-AssessKeyID"
+			}
 		},
 		"containerUri": {
 			"value": ""

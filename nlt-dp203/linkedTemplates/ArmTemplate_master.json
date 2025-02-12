@@ -7,17 +7,28 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "nlt-dp203"
 		},
-		"ADLS_accountKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'ADLS'"
-		},
 		"ADLS_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://nlt1166dp203.dfs.core.windows.net/"
 		},
+		"KeyVault_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://nlt-dp203.vault.azure.net/"
+		},
 		"LS_REST_OpenWeatherAPI_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "@{linkedService().base_url}"
+		},
+		"LS_AWS_S3_properties_typeProperties_accessKeyId": {
+			"type": "object",
+			"defaultValue": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "KeyVault",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "AWS-S3-AssessKeyID"
+			}
 		},
 		"containerUri": {
 			"type": "string",
@@ -46,14 +57,17 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
-					"ADLS_accountKey": {
-						"value": "[parameters('ADLS_accountKey')]"
+					"KeyVault_properties_typeProperties_baseUrl": {
+						"value": "[parameters('KeyVault_properties_typeProperties_baseUrl')]"
+					},
+					"LS_REST_OpenWeatherAPI_properties_typeProperties_url": {
+						"value": "[parameters('LS_REST_OpenWeatherAPI_properties_typeProperties_url')]"
 					},
 					"ADLS_properties_typeProperties_url": {
 						"value": "[parameters('ADLS_properties_typeProperties_url')]"
 					},
-					"LS_REST_OpenWeatherAPI_properties_typeProperties_url": {
-						"value": "[parameters('LS_REST_OpenWeatherAPI_properties_typeProperties_url')]"
+					"LS_AWS_S3_properties_typeProperties_accessKeyId": {
+						"value": "[parameters('LS_AWS_S3_properties_typeProperties_accessKeyId')]"
 					}
 				}
 			},

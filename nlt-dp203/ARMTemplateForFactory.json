@@ -7,17 +7,28 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "nlt-dp203"
 		},
-		"ADLS_accountKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'ADLS'"
-		},
 		"ADLS_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://nlt1166dp203.dfs.core.windows.net/"
 		},
+		"KeyVault_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://nlt-dp203.vault.azure.net/"
+		},
 		"LS_REST_OpenWeatherAPI_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "@{linkedService().base_url}"
+		},
+		"LS_AWS_S3_properties_typeProperties_accessKeyId": {
+			"type": "object",
+			"defaultValue": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "KeyVault",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "AWS-S3-AssessKeyID"
+			}
 		}
 	},
 	"variables": {
@@ -856,9 +867,28 @@
 				"typeProperties": {
 					"url": "[parameters('ADLS_properties_typeProperties_url')]",
 					"accountKey": {
-						"type": "SecureString",
-						"value": "[parameters('ADLS_accountKey')]"
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "KeyVault",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "ADLS-Key"
 					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/KeyVault')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/KeyVault')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('KeyVault_properties_typeProperties_baseUrl')]"
 				}
 			},
 			"dependsOn": []
@@ -889,7 +919,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Started",
+				"runtimeState": "Stopped",
 				"pipelines": [
 					{
 						"pipelineReference": {
@@ -919,6 +949,339 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/pl_API_test')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_Jobnet_Scraping')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "From S3 to ADLS",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AmazonS3ReadSettings",
+									"recursive": true,
+									"wildcardFolderPath": "scraped_data",
+									"wildcardFileName": {
+										"value": "@concat('jobs_',formatDateTime(utcNow('d'),'yyyyMMdd'),'.csv')",
+										"type": "Expression"
+									},
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings",
+									"copyBehavior": "FlattenHierarchy"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Titles",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "titles",
+											"physicalType": "UTF8"
+										}
+									},
+									{
+										"source": {
+											"name": "Company",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "company",
+											"physicalType": "UTF8"
+										}
+									},
+									{
+										"source": {
+											"name": "Category",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "job_category",
+											"physicalType": "UTF8"
+										}
+									},
+									{
+										"source": {
+											"name": "Location",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "job_location",
+											"physicalType": "UTF8"
+										}
+									},
+									{
+										"source": {
+											"name": "Benefits",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "benefits",
+											"physicalType": "UTF8"
+										}
+									},
+									{
+										"source": {
+											"name": "Highlights",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "highlights",
+											"physicalType": "UTF8"
+										}
+									},
+									{
+										"source": {
+											"name": "Opportunities",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "opportunities",
+											"physicalType": "UTF8"
+										}
+									},
+									{
+										"source": {
+											"name": "Posted_Date",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "job_posted_date",
+											"physicalType": "UTF8"
+										}
+									},
+									{
+										"source": {
+											"name": "Link",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "job_link",
+											"physicalType": "UTF8"
+										}
+									},
+									{
+										"source": {
+											"name": "page_id",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "page_id",
+											"type": "String",
+											"physicalType": "UTF8"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "DS_jobnet_raw",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DS_Generic_Parquet",
+								"type": "DatasetReference",
+								"parameters": {
+									"dir": "stg/jobnet",
+									"file_name": {
+										"value": "@concat('jobnet_jobs_',formatDateTime(utcNow('d'),'yyyyMMdd'),'.parquet')",
+										"type": "Expression"
+									},
+									"ws": "nlt1166dp203"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DS_jobnet_raw')]",
+				"[concat(variables('factoryId'), '/datasets/DS_Generic_Parquet')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_AWS_S3')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AmazonS3",
+				"typeProperties": {
+					"serviceUrl": "https://s3.amazonaws.com",
+					"accessKeyId": "[parameters('LS_AWS_S3_properties_typeProperties_accessKeyId')]",
+					"secretAccessKey": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "KeyVault",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "AWS-S3-Secret"
+					},
+					"authenticationType": "AccessKey"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/KeyVault')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_jobnet_raw')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_AWS_S3",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AmazonS3Location",
+						"bucketName": "jobnet-pipeline",
+						"folderPath": "scraped_data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Titles",
+						"type": "String"
+					},
+					{
+						"name": "Company",
+						"type": "String"
+					},
+					{
+						"name": "Category",
+						"type": "String"
+					},
+					{
+						"name": "Location",
+						"type": "String"
+					},
+					{
+						"name": "Benefits",
+						"type": "String"
+					},
+					{
+						"name": "Highlights",
+						"type": "String"
+					},
+					{
+						"name": "Opportunities",
+						"type": "String"
+					},
+					{
+						"name": "Posted_Date",
+						"type": "String"
+					},
+					{
+						"name": "Link",
+						"type": "String"
+					},
+					{
+						"name": "page_id",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_AWS_S3')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TR_Daily_6AM_BKK')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "PL_Jobnet_Scraping",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2025-02-12T11:23:00",
+						"timeZone": "SE Asia Standard Time",
+						"schedule": {
+							"minutes": [
+								10
+							],
+							"hours": [
+								6
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/PL_Jobnet_Scraping')]"
 			]
 		}
 	]
