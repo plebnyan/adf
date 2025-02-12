@@ -1,0 +1,10 @@
+{
+	"name": "KeyVault",
+	"properties": {
+		"annotations": [],
+		"type": "AzureKeyVault",
+		"typeProperties": {
+			"baseUrl": "https://nlt-dp203.vault.azure.net/"
+		}
+	}
+}
