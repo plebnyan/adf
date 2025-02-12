@@ -1,0 +1,32 @@
+{
+	"name": "TR_Daily_6AM_BKK",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "PL_Jobnet_Scraping",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2025-02-12T11:23:00",
+				"timeZone": "SE Asia Standard Time",
+				"schedule": {
+					"minutes": [
+						10
+					],
+					"hours": [
+						6
+					]
+				}
+			}
+		}
+	}
+}

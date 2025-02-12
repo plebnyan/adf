@@ -1,6 +1,188 @@
 {
 	"name": "PL_Jobnet_Scraping",
 	"properties": {
+		"activities": [
+			{
+				"name": "From S3 to ADLS",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AmazonS3ReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": "scraped_data",
+							"wildcardFileName": "*.csv",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings",
+							"copyBehavior": "FlattenHierarchy"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "Titles",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "titles",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "Company",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "company",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "Category",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "job_category",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "Location",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "job_location",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "Benefits",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "benefits",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "Highlights",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "highlights",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "Opportunities",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "opportunities",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "Posted_Date",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "job_posted_date",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "Link",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "job_link",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "page_id",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "page_id",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "DS_jobnet_raw",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DS_Generic_Parquet",
+						"type": "DatasetReference",
+						"parameters": {
+							"dir": "stg/jobnet",
+							"file_name": {
+								"value": "@concat('jobnet_jobs_',formatDateTime(utcNow('d'),'yyyyMMdd'),'.parquet')",
+								"type": "Expression"
+							},
+							"ws": "nlt1166dp203"
+						}
+					}
+				]
+			}
+		],
 		"annotations": []
 	}
 }
