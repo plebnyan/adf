@@ -1,0 +1,64 @@
+{
+	"name": "DS_jobnet_raw",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_AWS_S3",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AmazonS3Location",
+				"bucketName": "jobnet-pipeline",
+				"folderPath": "scraped_data"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "Titles",
+				"type": "String"
+			},
+			{
+				"name": "Company",
+				"type": "String"
+			},
+			{
+				"name": "Category",
+				"type": "String"
+			},
+			{
+				"name": "Location",
+				"type": "String"
+			},
+			{
+				"name": "Benefits",
+				"type": "String"
+			},
+			{
+				"name": "Highlights",
+				"type": "String"
+			},
+			{
+				"name": "Opportunities",
+				"type": "String"
+			},
+			{
+				"name": "Posted_Date",
+				"type": "String"
+			},
+			{
+				"name": "Link",
+				"type": "String"
+			},
+			{
+				"name": "page_id",
+				"type": "String"
+			}
+		]
+	}
+}
