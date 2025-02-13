@@ -152,8 +152,8 @@
 								},
 								"sink": {
 									"name": "page_id",
-									"type": "String",
-									"physicalType": "UTF8"
+									"type": "Int32",
+									"physicalType": "INT32"
 								}
 							}
 						],
