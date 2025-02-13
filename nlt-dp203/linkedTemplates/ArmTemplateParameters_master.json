@@ -11,9 +11,6 @@
 		"KeyVault_properties_typeProperties_baseUrl": {
 			"value": "https://nlt-dp203.vault.azure.net/"
 		},
-		"LS_REST_OpenWeatherAPI_properties_typeProperties_url": {
-			"value": "@{linkedService().base_url}"
-		},
 		"LS_AWS_S3_properties_typeProperties_accessKeyId": {
 			"value": {
 				"type": "AzureKeyVaultSecret",
@@ -23,6 +20,9 @@
 				},
 				"secretName": "AWS-S3-AssessKeyID"
 			}
+		},
+		"LS_REST_OpenWeatherAPI_properties_typeProperties_url": {
+			"value": "@{linkedService().base_url}"
 		},
 		"containerUri": {
 			"value": ""
