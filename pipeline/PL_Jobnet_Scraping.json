@@ -175,12 +175,12 @@
 						"referenceName": "DS_Generic_Parquet",
 						"type": "DatasetReference",
 						"parameters": {
-							"dir": "stg/jobnet",
+							"dir": "jobnet",
 							"file_name": {
-								"value": "@concat('jobnet_jobs_',formatDateTime(utcNow('d'),'yyyyMMdd'),'.parquet')",
+								"value": "@concat('jobs_',formatDateTime(addHours(utcNow('d'),7),'yyyyMMdd'),'.parquet')",
 								"type": "Expression"
 							},
-							"ws": "nlt1166dp203"
+							"ws": "stg"
 						}
 					}
 				]
