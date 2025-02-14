@@ -17,14 +17,20 @@
 				"typeProperties": {
 					"source": {
 						"type": "DelimitedTextSource",
+						"additionalColumns": [
+							{
+								"name": "load_date",
+								"value": {
+									"value": "@formatDateTime(addHours(utcNow('d'),7 ),'yyyy-MM-dd')",
+									"type": "Expression"
+								}
+							}
+						],
 						"storeSettings": {
 							"type": "AmazonS3ReadSettings",
 							"recursive": true,
 							"wildcardFolderPath": "scraped_data",
-							"wildcardFileName": {
-								"value": "@concat('jobs_',formatDateTime(utcNow('d'),'yyyyMMdd'),'.csv')",
-								"type": "Expression"
-							},
+							"wildcardFileName": "*.csv",
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
@@ -154,6 +160,15 @@
 									"name": "page_id",
 									"type": "Int32",
 									"physicalType": "INT32"
+								}
+							},
+							{
+								"source": {
+									"name": "load_date",
+									"type": "String"
+								},
+								"sink": {
+									"name": "load_date"
 								}
 							}
 						],

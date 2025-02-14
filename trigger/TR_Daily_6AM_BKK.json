@@ -14,7 +14,7 @@
 		"type": "ScheduleTrigger",
 		"typeProperties": {
 			"recurrence": {
-				"frequency": "Day",
+				"frequency": "Week",
 				"interval": 1,
 				"startTime": "2025-02-12T11:23:00",
 				"timeZone": "SE Asia Standard Time",
@@ -24,6 +24,9 @@
 					],
 					"hours": [
 						6
+					],
+					"weekDays": [
+						"Monday"
 					]
 				}
 			}
