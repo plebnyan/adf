@@ -87,6 +87,7 @@
 								}
 							},
 							"enableStaging": false,
+							"enableSkipIncompatibleRow": true,
 							"translator": {
 								"type": "TabularTranslator",
 								"mappings": [
@@ -1093,7 +1094,7 @@
 					"columnDelimiter": ",",
 					"escapeChar": "\\",
 					"firstRowAsHeader": true,
-					"quoteChar": "\""
+					"quoteChar": "|"
 				},
 				"schema": [
 					{

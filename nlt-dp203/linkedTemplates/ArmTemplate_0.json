@@ -205,7 +205,7 @@
 					"columnDelimiter": ",",
 					"escapeChar": "\\",
 					"firstRowAsHeader": true,
-					"quoteChar": "\""
+					"quoteChar": "|"
 				},
 				"schema": [
 					{
@@ -306,6 +306,7 @@
 								}
 							},
 							"enableStaging": false,
+							"enableSkipIncompatibleRow": true,
 							"translator": {
 								"type": "TabularTranslator",
 								"mappings": [
